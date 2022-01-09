@@ -1,4 +1,5 @@
 using ContactService.Data;
+using ContactService.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -53,7 +54,7 @@ namespace ContactService
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseMiddleware<ExceptionHandler>();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
