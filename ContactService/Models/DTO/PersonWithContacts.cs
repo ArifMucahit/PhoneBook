@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace ContactService.Models
+namespace ContactService.Models.DTO
 {
-    public class Person
+    public class PersonWithContacts
     {
-        public string UID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Company { get; set; }
-
-
-        public virtual List<ContactInfo> ContactInfos { get; set; }
+        public List<ContactDTO> ContactInfos { get; set; }
     }
 }
