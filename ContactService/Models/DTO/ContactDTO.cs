@@ -1,12 +1,11 @@
 ﻿using ContactService.Models.Enums;
 
-namespace ContactService.Models
+namespace ContactService.Models.DTO
 {
-    public class ContactInfo
+    public class ContactDTO
     {
-        public int ContactID { get; set; }
+        
         public EnumContactType InfoType { get; set; }
         public string InfoDetail { get; set; }
-        public string PersonUID { get; set; }
     }
 }

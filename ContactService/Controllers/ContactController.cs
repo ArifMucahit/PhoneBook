@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ContactService.Data;
+using ContactService.Models;
+using ContactService.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ContactService.Controllers
 {
@@ -8,39 +11,69 @@ namespace ContactService.Controllers
     public class ContactController : ControllerBase
     {
 
-        [HttpPost]
-        public ActionResult CreatePerson()
-        {
-            return Ok();
-        }
+        IRepo _repo;
 
-        [HttpDelete]
-        public ActionResult RemovePerson()
+        public ContactController(IRepo repo)
         {
-            return Ok();
+            _repo = repo;
         }
 
         [HttpPost]
-        public ActionResult CreatePersonContact()
+        public async Task<ActionResult> CreatePerson(PersonDTO person)
         {
-            return Ok();
+            var result =  await _repo.CreatePerson(new Person { Company = person.Company,Name = person.Name, Surname = person.Surname});
+            if (result)
+                return Ok();
+            return Problem();
+            
         }
 
         [HttpDelete]
-        public ActionResult RemovePersonContact()
+        public async Task<ActionResult> RemovePerson(string Name, string Surname)
         {
-            return Ok();
+            var result = await _repo.DeletePerson(new Person{ Name=Name, Surname=Surname});
+
+            if (result)
+                return Ok();
+            return Problem();
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreatePersonContact(PersonWithContact person)
+        {
+            var result = await _repo.CreateContact(person);
+
+            if (result)
+                return Ok();
+            return Problem();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> RemovePersonContact(PersonWithContact contact)
+        {
+            var result = await _repo.RemoveContact(contact);
+
+            if (result)
+                return Ok();
+            return Problem();
         }
 
         [HttpGet]
-        public ActionResult GetPerson()
+        public async Task<ActionResult> GetPerson()
         {
-            return Ok();
+            var result = await _repo.GetPersons();
+            if (result.Count > 0)
+                return Ok(result);
+            return NotFound();
         }
         [HttpGet]
-        public ActionResult GetPersonDetail()
+        public async Task<ActionResult> GetPersonDetail()
         {
-            return Ok();
+            var result = await _repo.GetPersonWithContact();
+            if (result.Count > 0)
+                return Ok(result);
+            return NotFound();
         }
     }
 }
