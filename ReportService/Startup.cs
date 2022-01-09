@@ -1,21 +1,15 @@
-using ContactService.Data;
-using ContactService.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ReportService.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+using ReportService.QueueManager;
 
-namespace ContactService
+namespace ReportService
 {
     public class Startup
     {
@@ -33,12 +27,11 @@ namespace ContactService
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ContactService", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ReportService", Version = "v1" });
             });
-
-
-            services.AddDbContext<PhoneBookContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
+            services.AddDbContext<ReportContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
             services.AddScoped<IRepo, Repo>();
+            services.AddSingleton<IRabbitService, RabbitService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,14 +40,15 @@ namespace ContactService
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContactService v1"));
             }
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ReportService v1"));
+            
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseMiddleware<ExceptionHandler>();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
