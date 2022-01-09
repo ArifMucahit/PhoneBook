@@ -1,5 +1,6 @@
 ﻿using ContactService.Models;
 using ContactService.Models.DTO;
+using ContactService.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -87,6 +88,29 @@ namespace ContactService.Data
             }).ToListAsync();
 
             return personContacts;
+        }
+
+        public async Task<List<LocationReportDTO>> GetLocationReport()
+        {
+            var report = (from contacts in _dbContext.ContactInfo
+                    join c2 in _dbContext.ContactInfo.DefaultIfEmpty().Where(x => x.InfoType == EnumContactType.PhoneNumber) on contacts.PersonUID equals c2.PersonUID
+                    select contacts
+                    ).ToList();
+
+            if (report == null)
+                return null;
+
+            var locReport = new List<LocationReportDTO>();
+            foreach (var item in report.Distinct().Where(x=> x.InfoType == EnumContactType.Location))
+            {
+                locReport.Add(new LocationReportDTO
+                {
+                    InfoDetail = item.InfoDetail,
+                    PersonOnLocation = report.Where(x=> x.InfoDetail == item.InfoDetail).Count(),
+                    PersonPhoneNumber = report.Where(x=> x.InfoType == EnumContactType.PhoneNumber && x.InfoDetail != null).Count()
+                });
+            }
+            return locReport;
         }
     }
 }

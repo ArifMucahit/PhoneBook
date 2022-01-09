@@ -13,5 +13,6 @@ namespace ContactService.Data
         Task<bool> RemoveContact(PersonWithContact contact);
         Task<List<PersonDTO>> GetPersons();
         Task<List<PersonWithContacts>> GetPersonWithContact();
+        Task<List<LocationReportDTO>> GetLocationReport();
     }
 }
