@@ -1,9 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ReportConsumer.Data;
 
 namespace ReportConsumer
 {
@@ -18,7 +17,10 @@ namespace ReportConsumer
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+
+                    IConfiguration configuration = hostContext.Configuration;
                     services.AddHostedService<Worker>();
+                    services.AddDbContext<ReportContext>(options => { options.UseNpgsql(configuration.GetConnectionString("Postgre")); },ServiceLifetime.Singleton);
                 });
     }
 }
