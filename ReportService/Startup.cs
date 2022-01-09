@@ -8,6 +8,7 @@ using ReportService.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using ReportService.QueueManager;
+using ReportService.Middleware;
 
 namespace ReportService
 {
@@ -48,7 +49,7 @@ namespace ReportService
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseMiddleware<ExceptionHandler>();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

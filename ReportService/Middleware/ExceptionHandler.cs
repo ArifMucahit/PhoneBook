@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace ContactService.Middleware
+namespace ReportService.Middleware
 {
     public class ExceptionHandler
     {
@@ -33,7 +33,7 @@ namespace ContactService.Middleware
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.ContentType = "application/json";
 
-            File.WriteAllTextAsync("ErrorLog.txt", JsonConvert.SerializeObject(exceptionObj));
+            File.WriteAllTextAsync("ErrorLog.txt",JsonConvert.SerializeObject(exceptionObj));
 
             return  context.Response.WriteAsJsonAsync("An unexpected error happened, please contact with help desk");
         }
