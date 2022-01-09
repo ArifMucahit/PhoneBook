@@ -75,5 +75,14 @@ namespace ContactService.Controllers
                 return Ok(result);
             return NotFound();
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetLocationReport()
+        {
+            var report = await _repo.GetLocationReport();
+            if (report == null)
+                return NotFound();
+            return Ok(report);
+        }
     }
 }
