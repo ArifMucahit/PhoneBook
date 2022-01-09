@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using ReportService.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using ReportService.QueueManager;
 
 namespace ReportService
 {
@@ -30,6 +31,7 @@ namespace ReportService
             });
             services.AddDbContext<ReportContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
             services.AddScoped<IRepo, Repo>();
+            services.AddSingleton<IRabbitService, RabbitService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
