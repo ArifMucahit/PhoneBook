@@ -1,3 +1,5 @@
+using Aspose.Cells;
+using Aspose.Cells.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -6,6 +8,8 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using ReportConsumer.Data;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,12 +23,16 @@ namespace ReportConsumer
         private IBasicProperties _queueProperty;
         private ReportContext _reportContext;
         private DbSet<ReportRequest> _table;
+        private HttpClient _httpClient;
+        private IConfiguration _configuration;
 
         public Worker(ILogger<Worker> logger,IConfiguration config,ReportContext reportContext)
         {
             _logger = logger;
             _reportContext = reportContext;
             _table = reportContext.Set<ReportRequest>();
+            _httpClient = new HttpClient();
+            _configuration = config;
 
             var connection = new ConnectionFactory()
             {
@@ -59,7 +67,14 @@ namespace ReportConsumer
 
         private async void ConsumerSave_Received(object sender, BasicDeliverEventArgs e)
         {
-            
+            var uuid = Encoding.UTF8.GetString(e.Body.ToArray()).Replace("\"","");
+
+            var path = await ReadReportData(uuid);
+            if (path == null)
+                _channel.BasicNack(e.DeliveryTag,false,false);
+
+            UpdateReportRequest(uuid, path);
+            _channel.BasicAck(e.DeliveryTag, false);
         }
 
 
@@ -71,9 +86,22 @@ namespace ReportConsumer
             _table.Update(request);
             _reportContext.SaveChangesAsync();
         }
-        private  void ReadReportData()
+        private  async Task<string> ReadReportData(string uuid)
         {
+            var data = await _httpClient.GetStringAsync(_configuration.GetSection("ThirdParty:ContactService").Value + "api/Contact/GetLocationReport");
+            if (data == null)
+                return null;
+            var path = uuid + ".xlsx";
+            var workBook = new Workbook();
+            var workSheet = workBook.Worksheets[0];
+            var jsonOpt = new JsonLayoutOptions();
 
+            jsonOpt.ArrayAsTable = true;
+
+            JsonUtility.ImportData(data, workSheet.Cells, 0, 0, jsonOpt);
+
+            workBook.Save(path);
+            return path;
         }
         
     }
