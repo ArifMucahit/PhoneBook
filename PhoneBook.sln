@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactService", "ContactSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportService", "ReportService\ReportService.csproj", "{D1F2F5F0-3E41-4E5F-A73C-59BE63471412}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportConsumer", "ReportConsumer\ReportConsumer.csproj", "{8B8544CF-1B95-45E2-B2BA-AC11F600EFBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D1F2F5F0-3E41-4E5F-A73C-59BE63471412}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1F2F5F0-3E41-4E5F-A73C-59BE63471412}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1F2F5F0-3E41-4E5F-A73C-59BE63471412}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B8544CF-1B95-45E2-B2BA-AC11F600EFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B8544CF-1B95-45E2-B2BA-AC11F600EFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B8544CF-1B95-45E2-B2BA-AC11F600EFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B8544CF-1B95-45E2-B2BA-AC11F600EFBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
